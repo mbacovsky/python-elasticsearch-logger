@@ -209,7 +209,8 @@ class CMRESHandler(logging.Handler):
             self._timer.start()
 
     def __get_es_client(self):
-        if self.auth_type == CMRESHandler.AuthType.NO_AUTH:
+        if self.auth_type == CMRESHandler.AuthType.NO_AUTH or \
+                self.auth_type == 'CMRESHandler.AuthType.NO_AUTH':
             if self._client is None:
                 self._client = Elasticsearch(hosts=self.hosts,
                                              use_ssl=self.use_ssl,
@@ -218,7 +219,8 @@ class CMRESHandler(logging.Handler):
                                              serializer=self.serializer)
             return self._client
 
-        if self.auth_type == CMRESHandler.AuthType.BASIC_AUTH:
+        if self.auth_type == CMRESHandler.AuthType.BASIC_AUTH or \
+                self.auth_type == 'CMRESHandler.AuthType.BASIC_AUTH':
             if self._client is None:
                 return Elasticsearch(hosts=self.hosts,
                                      http_auth=self.auth_details,
@@ -228,7 +230,8 @@ class CMRESHandler(logging.Handler):
                                      serializer=self.serializer)
             return self._client
 
-        if self.auth_type == CMRESHandler.AuthType.KERBEROS_AUTH:
+        if self.auth_type == CMRESHandler.AuthType.KERBEROS_AUTH or \
+                self.auth_type == 'CMRESHandler.AuthType.KERBEROS_AUTH':
             if not CMR_KERBEROS_SUPPORTED:
                 raise EnvironmentError("Kerberos module not available. Please install \"requests-kerberos\"")
             # For kerberos we return a new client each time to make sure the tokens are up to date
@@ -239,7 +242,8 @@ class CMRESHandler(logging.Handler):
                                  http_auth=HTTPKerberosAuth(mutual_authentication=DISABLED),
                                  serializer=self.serializer)
 
-        if self.auth_type == CMRESHandler.AuthType.AWS_SIGNED_AUTH:
+        if self.auth_type == CMRESHandler.AuthType.AWS_SIGNED_AUTH or \
+                self.auth_type == 'CMRESHandler.AuthType.AWS_SIGNED_AUTH':
             if not AWS4AUTH_SUPPORTED:
                 raise EnvironmentError("AWS4Auth not available. Please install \"requests-aws4auth\"")
             if self._client is None:
